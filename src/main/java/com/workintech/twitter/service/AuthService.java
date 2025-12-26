@@ -1,7 +1,7 @@
 package com.workintech.twitter.service;
 
-import com.workintech.twitter.dto.LoginRequest;
-import com.workintech.twitter.dto.RegisterRequest;
+import com.workintech.twitter.dto.requests.LoginRequest;
+import com.workintech.twitter.dto.requests.RegisterRequest;
 import com.workintech.twitter.entity.User;
 import com.workintech.twitter.repository.UserRepository;
 import com.workintech.twitter.security.JwtService;

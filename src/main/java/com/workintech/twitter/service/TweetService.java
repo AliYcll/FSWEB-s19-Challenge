@@ -2,6 +2,8 @@ package com.workintech.twitter.service;
 
 import com.workintech.twitter.entity.Tweet;
 import com.workintech.twitter.entity.User;
+import com.workintech.twitter.exception.ForbiddenException;
+import com.workintech.twitter.exception.NotFoundException;
 import com.workintech.twitter.repository.TweetRepository;
 import com.workintech.twitter.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class TweetService {
 
     public Tweet createTweet(Long userId, String content) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new NotFoundException("User not found."));
 
         Tweet tweet = new Tweet();
         tweet.setUser(user);
@@ -31,21 +33,21 @@ public class TweetService {
 
     public Tweet findById(Long tweetId) {
         return tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found."));
+                .orElseThrow(() -> new NotFoundException("Tweet not found."));
     }
 
     public List<Tweet> findByUserId(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new NotFoundException("User not found."));
         return tweetRepository.findByUser_Id(user.getId());
     }
 
     public Tweet updateTweet(Long tweetId, Long userId, String content) {
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found."));
+                .orElseThrow(() -> new NotFoundException("Tweet not found."));
 
         if (!tweet.getUser().getId().equals(userId)) {
-            throw new RuntimeException("User is not allowed to update this tweet.");
+            throw new ForbiddenException("User is not allowed to update this tweet.");
         }
 
         tweet.setContent(content);
@@ -54,10 +56,10 @@ public class TweetService {
 
     public void deleteTweet(Long tweetId, Long userId) {
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found."));
+                .orElseThrow(() -> new NotFoundException("Tweet not found."));
 
         if (!tweet.getUser().getId().equals(userId)) {
-            throw new RuntimeException("User is not allowed to delete this tweet.");
+            throw new ForbiddenException("User is not allowed to delete this tweet.");
         }
 
         tweetRepository.delete(tweet);

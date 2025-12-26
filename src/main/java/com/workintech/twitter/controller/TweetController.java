@@ -1,8 +1,9 @@
 package com.workintech.twitter.controller;
 
-import com.workintech.twitter.dto.TweetRequest;
+import com.workintech.twitter.dto.requests.TweetRequest;
 import com.workintech.twitter.entity.Tweet;
 import com.workintech.twitter.service.TweetService;
+import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class TweetController {
     }
 
     @PostMapping
-    public Tweet createTweet(@RequestBody TweetRequest request) {
+    public Tweet createTweet(@RequestBody @Valid TweetRequest request) {
         return tweetService.createTweet(request.getUserId(), request.getContent());
     }
 
@@ -43,7 +44,7 @@ public class TweetController {
     public Tweet updateTweet(
             @PathVariable("id") Long tweetId,
             @RequestParam Long userId,
-            @RequestBody TweetRequest request
+            @RequestBody @Valid TweetRequest request
     ) {
         return tweetService.updateTweet(tweetId, userId, request.getContent());
     }

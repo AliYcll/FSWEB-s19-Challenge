@@ -3,6 +3,8 @@ package com.workintech.twitter.service;
 import com.workintech.twitter.entity.Retweet;
 import com.workintech.twitter.entity.Tweet;
 import com.workintech.twitter.entity.User;
+import com.workintech.twitter.exception.ForbiddenException;
+import com.workintech.twitter.exception.NotFoundException;
 import com.workintech.twitter.repository.RetweetRepository;
 import com.workintech.twitter.repository.TweetRepository;
 import com.workintech.twitter.repository.UserRepository;
@@ -27,9 +29,9 @@ public class RetweetService {
 
     public Retweet retweet(Long userId, Long tweetId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new NotFoundException("User not found."));
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found."));
+                .orElseThrow(() -> new NotFoundException("Tweet not found."));
 
         boolean alreadyRetweeted = retweetRepository
                 .findByUser_IdAndTweet_Id(userId, tweetId)
@@ -46,16 +48,16 @@ public class RetweetService {
 
     public void deleteRetweet(Long userId, Long tweetId) {
         Retweet retweet = retweetRepository.findByUser_IdAndTweet_Id(userId, tweetId)
-                .orElseThrow(() -> new RuntimeException("Retweet not found."));
+                .orElseThrow(() -> new NotFoundException("Retweet not found."));
         retweetRepository.delete(retweet);
     }
 
     public void deleteRetweetById(Long retweetId, Long userId) {
         Retweet retweet = retweetRepository.findById(retweetId)
-                .orElseThrow(() -> new RuntimeException("Retweet not found."));
+                .orElseThrow(() -> new NotFoundException("Retweet not found."));
 
         if (!retweet.getUser().getId().equals(userId)) {
-            throw new RuntimeException("User is not allowed to delete this retweet.");
+            throw new ForbiddenException("User is not allowed to delete this retweet.");
         }
 
         retweetRepository.delete(retweet);

@@ -3,6 +3,7 @@ package com.workintech.twitter.service;
 import com.workintech.twitter.entity.Like;
 import com.workintech.twitter.entity.Tweet;
 import com.workintech.twitter.entity.User;
+import com.workintech.twitter.exception.NotFoundException;
 import com.workintech.twitter.repository.LikeRepository;
 import com.workintech.twitter.repository.TweetRepository;
 import com.workintech.twitter.repository.UserRepository;
@@ -27,10 +28,10 @@ public class LikeService {
 
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new NotFoundException("User not found."));
 
         Tweet tweet = tweetRepository.findById(tweetId)
-                .orElseThrow(() -> new RuntimeException("Tweet not found."));
+                .orElseThrow(() -> new NotFoundException("Tweet not found."));
 
 
         Optional<Like> foundLike = likeRepository.findByUser_IdAndTweet_Id(userId, tweetId);
@@ -49,7 +50,7 @@ public class LikeService {
     public void dislikeTweet(Long userId, Long tweetId) {
 
         Like like = likeRepository.findByUser_IdAndTweet_Id(userId, tweetId)
-                .orElseThrow(() -> new RuntimeException("Like not found"));
+                .orElseThrow(() -> new NotFoundException("Like not found"));
 
         likeRepository.delete(like);
     }

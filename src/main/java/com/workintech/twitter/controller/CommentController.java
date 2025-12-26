@@ -1,8 +1,9 @@
 package com.workintech.twitter.controller;
 
-import com.workintech.twitter.dto.CommentRequest;
+import com.workintech.twitter.dto.requests.CommentRequest;
 import com.workintech.twitter.entity.Comment;
 import com.workintech.twitter.service.CommentService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment createComment(@RequestBody CommentRequest request) {
+    public Comment createComment(@RequestBody @Valid CommentRequest request) {
         return commentService.createComment(
                 request.getUserId(),
                 request.getTweetId(),
@@ -35,7 +36,7 @@ public class CommentController {
     public Comment updateComment(
             @PathVariable("id") Long commentId,
             @RequestParam Long userId,
-            @RequestBody CommentRequest request
+            @RequestBody @Valid CommentRequest request
     ) {
         return commentService.updateComment(commentId, userId, request.getContent());
     }
