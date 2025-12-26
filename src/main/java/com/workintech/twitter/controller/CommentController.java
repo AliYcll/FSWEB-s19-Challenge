@@ -1,7 +1,8 @@
 package com.workintech.twitter.controller;
 
 import com.workintech.twitter.dto.requests.CommentRequest;
-import com.workintech.twitter.entity.Comment;
+import com.workintech.twitter.dto.responses.CommentResponse;
+import com.workintech.twitter.mapper.CommentMapper;
 import com.workintech.twitter.service.CommentService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,21 +25,25 @@ public class CommentController {
     }
 
     @PostMapping
-    public Comment createComment(@RequestBody @Valid CommentRequest request) {
-        return commentService.createComment(
-                request.getUserId(),
-                request.getTweetId(),
-                request.getContent()
+    public CommentResponse createComment(@RequestBody @Valid CommentRequest request) {
+        return CommentMapper.toResponse(
+                commentService.createComment(
+                        request.getUserId(),
+                        request.getTweetId(),
+                        request.getContent()
+                )
         );
     }
 
     @PutMapping("/{id}")
-    public Comment updateComment(
+    public CommentResponse updateComment(
             @PathVariable("id") Long commentId,
             @RequestParam Long userId,
             @RequestBody @Valid CommentRequest request
     ) {
-        return commentService.updateComment(commentId, userId, request.getContent());
+        return CommentMapper.toResponse(
+                commentService.updateComment(commentId, userId, request.getContent())
+        );
     }
 
     @DeleteMapping("/{id}")

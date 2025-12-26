@@ -1,7 +1,8 @@
 package com.workintech.twitter.controller;
 
 import com.workintech.twitter.dto.requests.RetweetRequest;
-import com.workintech.twitter.entity.Retweet;
+import com.workintech.twitter.dto.responses.RetweetResponse;
+import com.workintech.twitter.mapper.RetweetMapper;
 import com.workintech.twitter.service.RetweetService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +24,10 @@ public class RetweetController {
     }
 
     @PostMapping
-    public Retweet retweet(@RequestBody @Valid RetweetRequest request) {
-        return retweetService.retweet(request.getUserId(), request.getTweetId());
+    public RetweetResponse retweet(@RequestBody @Valid RetweetRequest request) {
+        return RetweetMapper.toResponse(
+                retweetService.retweet(request.getUserId(), request.getTweetId())
+        );
     }
 
     @DeleteMapping("/{id}")

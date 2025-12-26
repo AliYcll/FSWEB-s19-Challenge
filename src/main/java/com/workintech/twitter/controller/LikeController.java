@@ -1,7 +1,8 @@
 package com.workintech.twitter.controller;
 
 import com.workintech.twitter.dto.requests.LikeRequest;
-import com.workintech.twitter.entity.Like;
+import com.workintech.twitter.dto.responses.LikeResponse;
+import com.workintech.twitter.mapper.LikeMapper;
 import com.workintech.twitter.service.LikeService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +18,10 @@ public class LikeController {
     }
 
     @PostMapping("/like")
-    public Like like(@RequestBody @Valid LikeRequest request) {
-        return likeService.likeTweet(request.getUserId(), request.getTweetId());
+    public LikeResponse like(@RequestBody @Valid LikeRequest request) {
+        return LikeMapper.toResponse(
+                likeService.likeTweet(request.getUserId(), request.getTweetId())
+        );
     }
 
     @PostMapping("/dislike")

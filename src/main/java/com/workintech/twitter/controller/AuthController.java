@@ -3,7 +3,8 @@ package com.workintech.twitter.controller;
 import com.workintech.twitter.dto.requests.LoginRequest;
 import com.workintech.twitter.dto.responses.LoginResponse;
 import com.workintech.twitter.dto.requests.RegisterRequest;
-import com.workintech.twitter.entity.User;
+import com.workintech.twitter.dto.responses.UserSummaryResponse;
+import com.workintech.twitter.mapper.UserMapper;
 import com.workintech.twitter.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody @Valid RegisterRequest request) {
-        return authService.register(request);
+    public UserSummaryResponse register(@RequestBody @Valid RegisterRequest request) {
+        return UserMapper.toSummary(authService.register(request));
     }
 
     @PostMapping("/login")
